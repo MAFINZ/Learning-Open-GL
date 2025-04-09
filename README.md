@@ -1,5 +1,7 @@
 # Learning-Open-GL
 
+using MSYS2 MINGW64 in Windows 11 
+
 left off at https://learnopengl.com/Getting-started/Shaders
 have one orange triangle that changes alpha 
 have one multi color triangle
