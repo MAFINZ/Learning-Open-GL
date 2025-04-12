@@ -5,23 +5,23 @@ using ubuntu `g++ main.cpp glad.c -o main -I../../include -lglfw && ./main`
 slightly different setup
 
 WINDOWS  
-└───LearnOpenGL
-    └───src
+───LearnOpenGL
+    ───src
             glad.c
             main.cpp
             main.exe
             
 UBUNTU
 ── include
-│   ├── glad
-│   │   └── glad.h
-│   └── KHR
-│       └── khrplatform.h
-└── learningopengl
-    └── src
-        ├── glad.c
-        ├── main
-        └── main.cpp
+│   ── glad
+│   │   ── glad.h
+│   ── KHR
+│       ── khrplatform.h
+── learningopengl
+    ── src
+        ── glad.c
+        ── main
+        ── main.cpp
 
 
 5/9/25
