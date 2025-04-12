@@ -12,15 +12,24 @@ WINDOWS
             main.exe
             
 UBUNTU
-── include
+── include  
+
 │   ── glad
+
 │   │   ── glad.h
+
 │   ── KHR
+
 │       ── khrplatform.h
+
 ── learningopengl
+
     ── src
+    
         ── glad.c
+        
         ── main
+        
         ── main.cpp
 
 
