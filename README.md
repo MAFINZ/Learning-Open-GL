@@ -4,13 +4,13 @@ using MSYS2 MINGW64 in Windows 11 `g++ main.cpp glad.c -o main -lglfw3 -lopengl3
 using ubuntu `g++ main.cpp glad.c -o main -I../../include -lglfw && ./main` 
 slightly different setup
 
-WINDOWS          
-LearnOpenGL                
-  src
-    glad.c
-    main.cpp
-    main.exe
-
+WINDOWS  
+└───LearnOpenGL
+    └───src
+            glad.c
+            main.cpp
+            main.exe
+            
 UBUNTU
 ── include
 │   ├── glad
