@@ -7,10 +7,15 @@ WINDOWS glad khr in include glfw3 cmake
 UBUNTU glad khr in local include libglfw3-dev apt
 
 
-5/9/25
+4/9/25
 left off at https://learnopengl.com/Getting-started/Shaders
 have one orange triangle that changes alpha 
 have one multi color triangle
 
 
 ![image](https://github.com/user-attachments/assets/3124bac2-1074-4252-bc88-97273ffc63d4)
+
+4/13/25
+created shader header to compile fragment and vertex shaders from their seperate files and make a shader program  
+messed with the shaders a little  
+![image](https://github.com/user-attachments/assets/ecfa4e0b-a824-4b19-ac1e-4be00401ac89)
