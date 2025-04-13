@@ -1,45 +1,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "../include/shader.h"
+
 #include <iostream>
 #include <cmath>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
     
-const char* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-    
-const char* vertexShaderSource2 = "#version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (location = 1) in vec3 aColor;\n"
-"out vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"   ourColor = aColor;\n"
-"}\0";
-
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"uniform vec4 inputColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = inputColor;\n"
-"}\n\0";
-
-const char* fragmentShaderSource2 = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"in vec3 ourColor;\n"
-"void main()\n"
-"{\n"
-"   FragColor = vec4(ourColor, 1.0f);\n"
-"}\n\0";
-
 int main() {
     //glfw: initliaze and configure
     glfwInit();
@@ -65,58 +34,10 @@ int main() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    //build and compile shader program
-    //vertex shader
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int vertexShader2 = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader2, 1, &vertexShaderSource2, NULL);
-    glCompileShader(vertexShader2);
-
-    //fragment shader
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success)
-    {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int fragmentShader2 = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader2, 1, &fragmentShaderSource2, NULL);
-    glCompileShader(fragmentShader2);
-    //link shaders
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-    }
-
-    unsigned int shaderProgram2 = glCreateProgram();
-    glAttachShader(shaderProgram2, vertexShader2);
-    glAttachShader(shaderProgram2, fragmentShader2);
-    glLinkProgram(shaderProgram2);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(vertexShader2);
-    glDeleteShader(fragmentShader);
-    glDeleteShader(fragmentShader2);
+    std::cout << "Making colorInput shader program." << std::endl;
+    Shader colorInput("../shaders/colorInput.vs", "../shaders/colorInput.fs");
+    std::cout << "Making colorUpdate shader program" << std::endl;
+    Shader colorUpdate("../shaders/colorUpdate.vs", "../shaders/colorUpdate.fs");
 
     // set up vertex data and buffers and configure vertex attributes
     float triangle1[] = {
@@ -174,17 +95,18 @@ int main() {
 
         float timeValue = glfwGetTime();
         float alphaValue = std::abs(std::sin(timeValue));
-        int vertexColorLocation = glGetUniformLocation(shaderProgram, "inputColor");
-        glUseProgram(shaderProgram);
+        int vertexColorLocation = glGetUniformLocation(colorUpdate.ID, "inputColor");
+        colorUpdate.use();
         glUniform4f(vertexColorLocation, 1.0f, 0.5f, 0.2f, alphaValue);
-        
+        colorUpdate.setFloat("xOffset", .5);
+
         //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glBindVertexArray(VAO[0]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
-        glUseProgram(shaderProgram2);
+        colorInput.use();
         glBindVertexArray(VAO[1]);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -194,8 +116,6 @@ int main() {
 
     glDeleteVertexArrays(2, VAO);
     glDeleteBuffers(2, VBO);
-    glDeleteProgram(shaderProgram);
-    glDeleteProgram(shaderProgram2);
 
     glfwTerminate();
     return 0;
